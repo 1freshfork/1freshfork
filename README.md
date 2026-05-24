@@ -21,7 +21,7 @@
     [SYSTEM INFO] Crafting high-end web architectures, optimized backend proxies, and buttery-smooth desktop experiences.
   </p>
   
-  <img src="https://github-readme-activity-graph.vercel.app/graph?username=sergaytrain&bg_color=00000000&color=26A69A&line=26A69A&point=FFFFFF&area=true&hide_border=true" width="100%" />
+  <img src="https://github-readme-activity-graph.vercel.app/graph?username=1freshfork&bg_color=00000000&color=26A69A&line=26A69A&point=FFFFFF&area=true&hide_border=true" width="100%" />
   
   <div align="right" style="color: #26A69A; font-family: monospace; font-size: 11px; font-weight: bold; margin-top: 10px;">SYSTEM STATUS: ACTIVE // LIVE FEED</div>
 </div>
@@ -72,12 +72,12 @@
   <tr>
     <td width="50%" align="center" style="padding: 10px;">
       <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(38,166,154,0.15); border-radius: 14px; padding: 10px;">
-        <img src="https://github-readme-stats-fast.vercel.app/api?username=sergaytrain&show_icons=true&theme=darkhub&hide_border=true&title_color=26A69A&icon_color=26A69A&text_color=FFFFFF&bg_color=00000000" width="100%" />
+        <img src="https://github-readme-stats-fast.vercel.app/api?username=1freshfork&show_icons=true&theme=darkhub&hide_border=true&title_color=26A69A&icon_color=26A69A&text_color=FFFFFF&bg_color=00000000" width="100%" />
       </div>
     </td>
     <td width="50%" align="center" style="padding: 10px;">
       <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(38,166,154,0.15); border-radius: 14px; padding: 10px;">
-        <img src="https://github-readme-stats-fast.vercel.app/api/top-langs/?username=sergaytrain&layout=compact&theme=darkhub&hide_border=true&title_color=26A69A&icon_color=26A69A&text_color=FFFFFF&bg_color=00000000" width="100%" />
+        <img src="https://github-readme-stats-fast.vercel.app/api/top-langs/?username=1freshfork&layout=compact&theme=darkhub&hide_border=true&title_color=26A69A&icon_color=26A69A&text_color=FFFFFF&bg_color=00000000" width="100%" />
       </div>
     </td>
   </tr>
@@ -86,12 +86,12 @@
 <br/>
 
 <div style="filter: drop-shadow(0px 0px 6px rgba(3a,166,154,0.3)); margin: 15px 0;">
-  <img src="https://github-profile-trophy.vercel.app/?username=sergaytrain&theme=darkhub&no-frame=true&no-bg=true&columns=7&margin-w=15" width="90%" />
+  <img src="https://github-profile-trophy.vercel.app/?username=1freshfork&theme=darkhub&no-frame=true&no-bg=true&columns=7&margin-w=15" width="90%" />
 </div>
 
 <br/>
 <br/>
 
-<img src="https://komarev.com/ghpvc/?username=sergaytrain&color=26A69A&style=cyber&label=PROFILE+ACCESS+LOG" alt="Views Counter" />
+<img src="https://komarev.com/ghpvc/?username=1freshfork&color=26A69A&style=cyber&label=PROFILE+ACCESS+LOG" alt="Views Counter" />
 
 </div>
