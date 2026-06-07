@@ -66,9 +66,10 @@
             text-align: center;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
             animation: fadeIn 1.2s ease-out;
+            position: relative;
         }
 
-        /* Аватар с пульсацией */
+        /* Аватар */
         .avatar {
             position: relative;
             width: 130px;
@@ -90,7 +91,7 @@
             border-color: var(--accent-color);
         }
 
-        /* Никнейм (Шрифт: Archivo Black) */
+        /* Никнейм */
         .nickname h1 {
             font-family: 'Archivo Black', sans-serif;
             font-size: 1.8rem;
@@ -152,6 +153,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            position: relative;
         }
 
         .cover {
@@ -169,16 +171,28 @@
             object-fit: cover;
         }
 
-        /* Анимация вращения обложки при воспроизведении */
         .cover.playing {
             animation: rotateCover 12s linear infinite;
         }
 
-        /* Текст песни (Шрифт: Montserrat) */
+        /* Текст песни */
         .music-info {
             display: flex;
             flex-direction: column;
             gap: 12px;
+        }
+
+        .music-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .music-name {
+            text-align: left;
+            flex: 1;
+            padding-right: 10px;
         }
 
         .music-name h2 {
@@ -186,6 +200,10 @@
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 260px;
         }
 
         .author {
@@ -193,6 +211,104 @@
             font-size: 0.85rem;
             color: var(--text-sub);
             font-weight: 400;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 260px;
+        }
+
+        /* Кнопка списка */
+        .btn-playlist-toggle {
+            cursor: pointer;
+            color: var(--text-sub);
+            transition: all 0.2s ease;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-playlist-toggle:hover, .btn-playlist-toggle.active {
+            color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        /* Выпадающий список треков */
+        .playlist-dropdown {
+            display: none;
+            background: rgba(10, 10, 12, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-glass);
+            border-radius: 15px;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease-out;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .playlist-dropdown.show {
+            display: flex;
+        }
+
+        .playlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.2s ease;
+        }
+
+        .playlist-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .playlist-item.current {
+            border-left: 3px solid var(--accent-color);
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            max-width: 240px;
+        }
+
+        .item-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-author {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+        }
+
+        .item-btn {
+            cursor: pointer;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease;
+        }
+
+        .item-btn:hover {
+            color: var(--text-main);
+        }
+
+        .playlist-item.current .item-btn {
+            color: var(--accent-color);
         }
 
         /* Кастомный Прогресс-бар */
@@ -213,7 +329,7 @@
             transition: width 0.1s linear;
         }
 
-        /* Кнопки управления плеером */
+        /* Кнопки управления */
         .buttons {
             display: flex;
             justify-content: center;
@@ -252,12 +368,23 @@
             box-shadow: 0 4px 15px rgba(0, 255, 204, 0.4);
         }
 
-        /* Прячем кнопку паузы по умолчанию */
         .buttons .pause {
             display: none;
         }
 
-        /* Анимации появления */
+        /* Скроллбар для списка */
+        .playlist-dropdown::-webkit-scrollbar {
+            width: 4px;
+        }
+        .playlist-dropdown::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+        }
+        .playlist-dropdown::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+
+        /* Анимации */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
@@ -287,15 +414,24 @@
         </div>
         <div class="music">
             <div class="cover" id="music-cover">
-                <img src="files/cover.png" alt="cover">
+                <img src="files/cover.png" alt="cover" id="cover-img">
             </div>
             <div class="music-info">
-                <div class="music-name">
-                    <h2>Тело похудело</h2>
-                    <div class="author">
-                        <p>КОРЗА</p>
+                <div class="music-header">
+                    <div class="music-name">
+                        <h2 id="track-title">Тело похудело</h2>
+                        <div class="author">
+                            <p id="track-author">КОРЗА</p>
+                        </div>
+                    </div>
+                    <div class="btn-playlist-toggle" id="btn-playlist">
+                        <span class="material-symbols-outlined">list</span>
                     </div>
                 </div>
+
+                <div class="playlist-dropdown" id="playlist-dropdown">
+                    </div>
+
                 <div class="progress-container" id="progress-container">
                     <div class="progress-bar" id="progress-bar"></div>
                 </div>
@@ -322,39 +458,125 @@
     </div>
 
     <script>
+        // База данных треков
+        const playlist = [
+            { title: "Тело похудело", author: "КОРЗА", cover: "files/cover.png", src: "files/music.mp3" },
+            { title: "КАЗАНТИП 2007", author: "дмитрий уткин, 2nd.gf", cover: "files/cover2.png", src: "files/music-2.mp3" },
+            { title: "Пообещай", author: "влад пиво, ЯРЧЕ СОЛНЦА, besoboy", cover: "files/cover3.png", src: "files/music-3.mp3" },
+            { title: "дым", author: "67pain, JosyDROPP", cover: "files/cover4.png", src: "files/music-4.mp3" }
+        ];
+
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+
         const audio = document.getElementById('audio');
         const btnPlay = document.getElementById('btn-play');
         const btnPause = document.getElementById('btn-pause');
         const btnBack = document.getElementById('btn-back');
         const btnForward = document.getElementById('btn-forward');
+        const btnPlaylist = document.getElementById('btn-playlist');
+        const playlistDropdown = document.getElementById('playlist-dropdown');
+        
         const progressBar = document.getElementById('progress-bar');
         const progressContainer = document.getElementById('progress-container');
         const musicCover = document.getElementById('music-cover');
+        const coverImg = document.getElementById('cover-img');
+        const trackTitle = document.getElementById('track-title');
+        const trackAuthor = document.getElementById('track-author');
+
+        // Инициализация списка в интерфейсе
+        function renderPlaylist() {
+            playlistDropdown.innerHTML = '';
+            playlist.forEach((track, index) => {
+                const item = document.createElement('div');
+                item.classList.add('playlist-item');
+                if (index === currentTrackIndex) item.classList.add('current');
+
+                // Определяем правильную иконку для трека в списке
+                const icon = (index === currentTrackIndex && isPlaying) ? 'pause' : 'play_arrow';
+
+                item.innerHTML = `
+                    <div class="item-info">
+                        <span class="item-title">${track.title}</span>
+                        <span class="item-author">${track.author}</span>
+                    </div>
+                    <div class="item-btn" onclick="toggleTrackFromList(${index})">
+                        <span class="material-symbols-outlined">${icon}</span>
+                    </div>
+                `;
+                playlistDropdown.appendChild(item);
+            });
+        }
+
+        // Загрузка трека
+        function loadTrack(index) {
+            currentTrackIndex = index;
+            const track = playlist[currentTrackIndex];
+            audio.src = track.src;
+            coverImg.src = track.cover;
+            trackTitle.textContent = track.title;
+            trackAuthor.textContent = track.author;
+            progressBar.style.width = '0%';
+        }
 
         // Play
-        btnPlay.addEventListener('click', () => {
-            audio.play();
-            btnPlay.style.display = 'none';
-            btnPause.style.display = 'flex';
-            musicCover.classList.add('playing');
-        });
+        function playTrack() {
+            audio.play().then(() => {
+                isPlaying = true;
+                btnPlay.style.display = 'none';
+                btnPause.style.display = 'flex';
+                musicCover.classList.add('playing');
+                renderPlaylist();
+            }).catch(err => console.log("Ошибка воспроизведения:", err));
+        }
 
         // Pause
-        btnPause.addEventListener('click', () => {
+        function pauseTrack() {
             audio.pause();
+            isPlaying = false;
             btnPause.style.display = 'none';
             btnPlay.style.display = 'flex';
             musicCover.classList.remove('playing');
-        });
+            renderPlaylist();
+        }
 
-        // Назад на 5 секунд
+        // Переключение из интерфейса списка
+        window.toggleTrackFromList = function(index) {
+            if (currentTrackIndex === index) {
+                if (isPlaying) pauseTrack();
+                else playTrack();
+            } else {
+                loadTrack(index);
+                playTrack();
+            }
+        };
+
+        // События кнопок плеера
+        btnPlay.addEventListener('click', playTrack);
+        btnPause.addEventListener('click', pauseTrack);
+
+        // Кнопка Назад (предыдущий трек)
         btnBack.addEventListener('click', () => {
-            audio.currentTime = Math.max(0, audio.currentTime - 5);
+            let index = currentTrackIndex - 1;
+            if (index < 0) index = playlist.length - 1;
+            loadTrack(index);
+            if (isPlaying) playTrack();
+            else renderPlaylist();
         });
 
-        // Вперед на 5 секунд
+        // Кнопка Вперед (следующий трек)
         btnForward.addEventListener('click', () => {
-            audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
+            let index = currentTrackIndex + 1;
+            if (index >= playlist.length) index = 0;
+            loadTrack(index);
+            if (isPlaying) playTrack();
+            else renderPlaylist();
+        });
+
+        // Открытие/Закрытие плейлиста
+        btnPlaylist.addEventListener('click', () => {
+            playlistDropdown.classList.toggle('show');
+            btnPlaylist.classList.toggle('active');
         });
 
         // Обновление прогресс-бара
@@ -370,19 +592,21 @@
             const width = progressContainer.clientWidth;
             const clickX = e.offsetX;
             const duration = audio.duration;
-
             if (duration) {
                 audio.currentTime = (clickX / width) * duration;
             }
         });
 
-        // Сброс стиля обложки, если трек закончился
+        // Автопереключение на следующий трек по окончании текущего
         audio.addEventListener('ended', () => {
-            btnPause.style.display = 'none';
-            btnPlay.style.display = 'flex';
-            musicCover.classList.remove('playing');
-            progressBar.style.width = '0%';
+            let index = currentTrackIndex + 1;
+            if (index >= playlist.length) index = 0;
+            loadTrack(index);
+            playTrack();
         });
+
+        // Первичный рендеринг при старте страницы
+        renderPlaylist();
     </script>
 </body>
 </html>
