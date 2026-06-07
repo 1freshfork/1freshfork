@@ -398,7 +398,7 @@
 </head>
 <body>
 
-    <audio id="audio" src="files/music.mp3"></audio>
+    <audio id="audio"></audio>
 
     <div class="portfolio">
         <div class="avatar">
@@ -429,8 +429,7 @@
                     </div>
                 </div>
 
-                <div class="playlist-dropdown" id="playlist-dropdown">
-                    </div>
+                <div class="playlist-dropdown" id="playlist-dropdown"></div>
 
                 <div class="progress-container" id="progress-container">
                     <div class="progress-bar" id="progress-bar"></div>
@@ -458,7 +457,6 @@
     </div>
 
     <script>
-        // База данных треков
         const playlist = [
             { title: "Тело похудело", author: "КОРЗА", cover: "files/cover.png", src: "files/music.mp3" },
             { title: "КАЗАНТИП 2007", author: "дмитрий уткин, 2nd.gf", cover: "files/cover2.png", src: "files/music-2.mp3" },
@@ -468,6 +466,7 @@
 
         let currentTrackIndex = 0;
         let isPlaying = false;
+        let isInitialLoad = true; // Флаг для первой загрузки сохраненного времени
 
         const audio = document.getElementById('audio');
         const btnPlay = document.getElementById('btn-play');
@@ -484,7 +483,6 @@
         const trackTitle = document.getElementById('track-title');
         const trackAuthor = document.getElementById('track-author');
 
-        // Инициализация списка в интерфейсе
         function renderPlaylist() {
             playlistDropdown.innerHTML = '';
             playlist.forEach((track, index) => {
@@ -492,7 +490,6 @@
                 item.classList.add('playlist-item');
                 if (index === currentTrackIndex) item.classList.add('current');
 
-                // Определяем правильную иконку для трека в списке
                 const icon = (index === currentTrackIndex && isPlaying) ? 'pause' : 'play_arrow';
 
                 item.innerHTML = `
@@ -508,7 +505,6 @@
             });
         }
 
-        // Загрузка трека
         function loadTrack(index) {
             currentTrackIndex = index;
             const track = playlist[currentTrackIndex];
@@ -517,9 +513,11 @@
             trackTitle.textContent = track.title;
             trackAuthor.textContent = track.author;
             progressBar.style.width = '0%';
+            
+            // Сохраняем индекс текущего трека в localStorage
+            localStorage.setItem('audio_current_index', index);
         }
 
-        // Play
         function playTrack() {
             audio.play().then(() => {
                 isPlaying = true;
@@ -527,10 +525,17 @@
                 btnPause.style.display = 'flex';
                 musicCover.classList.add('playing');
                 renderPlaylist();
-            }).catch(err => console.log("Ошибка воспроизведения:", err));
+            }).catch(err => {
+                console.log("Автовоспроизведение заблокировано браузером. Ожидание клика пользователя.");
+                // Если браузер заблокировал старт, визуально оставляем кнопку Play
+                isPlaying = false;
+                btnPause.style.display = 'none';
+                btnPlay.style.display = 'flex';
+                musicCover.classList.remove('playing');
+                renderPlaylist();
+            });
         }
 
-        // Pause
         function pauseTrack() {
             audio.pause();
             isPlaying = false;
@@ -540,55 +545,70 @@
             renderPlaylist();
         }
 
-        // Переключение из интерфейса списка
         window.toggleTrackFromList = function(index) {
             if (currentTrackIndex === index) {
                 if (isPlaying) pauseTrack();
                 else playTrack();
             } else {
+                isInitialLoad = false; // При ручном переключении сбрасываем флаг
                 loadTrack(index);
                 playTrack();
             }
         };
 
-        // События кнопок плеера
-        btnPlay.addEventListener('click', playTrack);
+        btnPlay.addEventListener('click', () => {
+            isInitialLoad = false;
+            playTrack();
+        });
         btnPause.addEventListener('click', pauseTrack);
 
-        // Кнопка Назад (предыдущий трек)
         btnBack.addEventListener('click', () => {
+            isInitialLoad = false;
             let index = currentTrackIndex - 1;
             if (index < 0) index = playlist.length - 1;
             loadTrack(index);
-            if (isPlaying) playTrack();
-            else renderPlaylist();
+            playTrack();
         });
 
-        // Кнопка Вперед (следующий трек)
         btnForward.addEventListener('click', () => {
+            isInitialLoad = false;
             let index = currentTrackIndex + 1;
             if (index >= playlist.length) index = 0;
             loadTrack(index);
-            if (isPlaying) playTrack();
-            else renderPlaylist();
+            playTrack();
         });
 
-        // Открытие/Закрытие плейлиста
         btnPlaylist.addEventListener('click', () => {
             playlistDropdown.classList.toggle('show');
             btnPlaylist.classList.toggle('active');
         });
 
-        // Обновление прогресс-бара
+        // Срабатывает, когда метаданные трека загружены (узнали полную длительность)
+        audio.addEventListener('loadedmetadata', () => {
+            if (isInitialLoad) {
+                const savedTime = localStorage.getItem('audio_current_time');
+                if (savedTime) {
+                    audio.currentTime = parseFloat(savedTime);
+                    // Обновляем визуальный прогресс-бар сразу
+                    const progressPercent = (audio.currentTime / audio.duration) * 100;
+                    progressBar.style.width = `${progressPercent}%`;
+                }
+                isInitialLoad = false;
+            }
+        });
+
         audio.addEventListener('timeupdate', () => {
             if (audio.duration) {
                 const progressPercent = (audio.currentTime / audio.duration) * 100;
                 progressBar.style.width = `${progressPercent}%`;
+                
+                // Каждую секунду сохраняем текущий прогресс в localStorage
+                localStorage.setItem('audio_current_time', audio.currentTime);
             }
         });
 
-        // Перемотка кликом по прогресс-бару
         progressContainer.addEventListener('click', (e) => {
+            isInitialLoad = false;
             const width = progressContainer.clientWidth;
             const clickX = e.offsetX;
             const duration = audio.duration;
@@ -597,16 +617,24 @@
             }
         });
 
-        // Автопереключение на следующий трек по окончании текущего
         audio.addEventListener('ended', () => {
+            isInitialLoad = false;
             let index = currentTrackIndex + 1;
             if (index >= playlist.length) index = 0;
             loadTrack(index);
             playTrack();
         });
 
-        // Первичный рендеринг при старте страницы
-        renderPlaylist();
+        // ВОССТАНОВЛЕНИЕ СОСТОЯНИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ
+        const savedIndex = localStorage.getItem('audio_current_index');
+        if (savedIndex !== null && playlist[savedIndex]) {
+            loadTrack(parseInt(savedIndex));
+        } else {
+            loadTrack(0);
+        }
+
+        // Пытаемся запустить проигрывание
+        playTrack();
     </script>
 </body>
 </html>
